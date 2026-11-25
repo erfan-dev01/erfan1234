@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>کارگاه Git و GitHub</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#070d1c;--p:#101a36;--p2:#17244a;--ink:#f1f5f9;--mute:#9fb0c8;--or:#f05133;--cy:#22d3ee;--ok:#34d399;--line:#2a3a68;--code:#020611;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){color-scheme:light;--bg:#eef3fb;--p:#fff;--p2:#e4ecfa;--ink:#0f1b33;--mute:#4a5d80;--or:#d93a1c;--cy:#0a7fa0;--ok:#0f8f66;--line:#c3d0ea;--code:#0b1530}}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:radial-gradient(circle at 80% 10%,rgba(240,81,51,.18),transparent 45%),radial-gradient(circle at 10% 90%,rgba(34,211,238,.15),transparent 45%),var(--bg);color:var(--ink);font:400 clamp(15px,1.5vw,21px)/1.8 Vazirmatn,Tahoma,sans-serif;overflow:hidden}
+#stage{position:absolute;inset:0;perspective:1600px;overflow:hidden}
+.s{position:absolute;inset:0;padding:clamp(18px,3vw,44px) clamp(18px,5vw,70px) 70px;display:flex;flex-direction:column;justify-content:center;gap:12px;opacity:0;pointer-events:none;transform:translateX(-30%) rotateY(35deg) scale(.85);transition:.7s cubic-bezier(.2,.8,.2,1);overflow:auto}
+.s.on{opacity:1;pointer-events:auto;transform:none}
+.s.prev{transform:translateX(30%) rotateY(-35deg) scale(.85)}
+h1{font-size:clamp(30px,5.5vw,68px);line-height:1.3;margin:0}h1 b,h2 b{color:var(--or)}
+h2{font-size:clamp(24px,3.4vw,42px);margin:0;line-height:1.4}
+.tag{color:var(--cy);font-weight:600;letter-spacing:.5px}
+p{margin:0;color:var(--mute)}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));transform-style:preserve-3d}
+.card{background:linear-gradient(145deg,var(--p2),var(--p));border:1px solid var(--line);border-radius:16px;padding:14px 18px;transform-style:preserve-3d;transition:transform .15s,box-shadow .3s;box-shadow:0 14px 30px rgba(0,0,0,.25)}
+.card:hover{box-shadow:0 22px 44px rgba(34,211,238,.18)}
+.card h4{margin:0;font-size:1.05em;color:var(--cy);transform:translateZ(30px)}.card p{font-size:.88em;transform:translateZ(15px)}
+.ic{font-size:2em;display:block;transform:translateZ(45px);line-height:1.3}
+code,.k{direction:ltr;unicode-bidi:isolate;font-family:ui-monospace,Consolas,monospace;color:var(--ok)}
+.chips{display:flex;flex-wrap:wrap;gap:10px}.chips span{background:var(--p2);border:1px solid var(--line);border-radius:30px;padding:2px 16px;font-size:.85em}.chips span:before{content:attr(data-n);color:var(--or);font-weight:800;margin-left:8px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:center}@media(max-width:900px){.row{grid-template-columns:1fr}}
+.term{background:var(--code);border:1px solid var(--line);border-radius:12px;direction:ltr;text-align:left;font:clamp(13px,1.25vw,17px)/1.7 ui-monospace,Consolas,monospace;color:#bdf7ff;padding:0 0 12px;box-shadow:0 20px 50px rgba(0,0,0,.4);transform:perspective(900px) rotateY(6deg)}
+.term .bar{display:flex;gap:6px;align-items:center;padding:8px 12px;border-bottom:1px solid #1b2a52;font-size:.8em;color:#7b8db0}.term .bar i{width:11px;height:11px;border-radius:50%;background:#f05133}.term .bar i:nth-child(2){background:#fbbf24}.term .bar i:nth-child(3){background:#34d399}
+.term pre{margin:0;padding:10px 16px;min-height:9.5em;white-space:pre-wrap}.term .p{color:#f9a58f}.term .o{color:#7b8db0}
+button{font:600 14px Vazirmatn,sans-serif;background:var(--or);color:#fff;border:0;border-radius:8px;padding:4px 16px;cursor:pointer;margin:0 12px}
+.lab{border:2px dashed var(--ok);border-radius:14px;padding:10px 18px;background:rgba(52,211,153,.07)}
+.lab b{color:var(--ok)}.lab ol{margin:4px 0 0;padding-right:22px}.lab li{margin:0}
+svg{max-width:100%;height:auto}
+.cube-wrap{perspective:900px;width:150px;height:150px;margin:20px auto}
+.cube{width:150px;height:150px;position:relative;transform-style:preserve-3d;animation:spin 14s linear infinite}
+.cube div{position:absolute;inset:0;border:2px solid var(--cy);background:rgba(16,26,54,.82);display:grid;place-items:center;font-size:54px;box-shadow:inset 0 0 30px rgba(34,211,238,.25)}
+.cube div:nth-child(1){transform:translateZ(75px)}.cube div:nth-child(2){transform:rotateY(90deg) translateZ(75px)}.cube div:nth-child(3){transform:rotateY(180deg) translateZ(75px)}.cube div:nth-child(4){transform:rotateY(-90deg) translateZ(75px)}.cube div:nth-child(5){transform:rotateX(90deg) translateZ(75px)}.cube div:nth-child(6){transform:rotateX(-90deg) translateZ(75px)}
+@keyframes spin{to{transform:rotateX(-20deg) rotateY(360deg)}}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.flow .card{padding:6px 14px;text-align:center}.flow em{color:var(--or);font-style:normal;font-size:1.5em}
+nav{position:fixed;bottom:0;inset-inline:0;height:56px;display:flex;align-items:center;gap:10px;padding:0 20px;background:rgba(7,13,28,.85);backdrop-filter:blur(10px);border-top:1px solid var(--line);z-index:9;padding-bottom:env(safe-area-inset-bottom,0px);height:calc(56px + env(safe-area-inset-bottom,0px))}
+nav button{margin:0;background:var(--p2);border:1px solid var(--line);color:#f1f5f9}
+#bar{flex:1;height:6px;background:var(--line);border-radius:3px;overflow:hidden}#bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--or),var(--cy));transition:.5s}
+#cnt{color:#f1f5f9;font-size:14px;min-width:46px;text-align:center}
+.tm{background:var(--or);color:#fff;border-radius:20px;padding:0 12px;font-size:.75em;margin-right:10px}
+.term pre:after{content:"▍";color:#22d3ee;animation:bl 1s steps(2) infinite}@keyframes bl{50%{opacity:0}}
+.s.on .card{animation:rise .8s cubic-bezier(.2,.8,.2,1) backwards}.s.on .card:nth-child(2){animation-delay:.12s}.s.on .card:nth-child(3){animation-delay:.24s}.s.on .card:nth-child(4){animation-delay:.36s}.s.on .card:nth-child(5){animation-delay:.48s}.s.on .card:nth-child(n+6){animation-delay:.6s}
+@keyframes rise{from{opacity:0;transform:translateY(50px) rotateX(45deg) scale(.9)}}
+.s.on .dr{stroke-dasharray:1000;stroke-dashoffset:1000;animation:dw 2.4s .3s forwards}@keyframes dw{to{stroke-dashoffset:0}}
+.s.on svg circle{animation:pop .6s 1s backwards}@keyframes pop{from{r:0}}
+.s.on .flow em{animation:nudge 1.2s infinite}@keyframes nudge{50%{transform:translateX(-6px)}}
+.s.on h2{animation:rise .8s backwards}
+.s>p{display:none}#bg{position:fixed;inset:0;z-index:0;opacity:.55}#stage{z-index:1}
+h1 b,h2 b{background:linear-gradient(90deg,var(--or),#fbbf24,var(--or));background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 4s linear infinite}@keyframes sh{to{background-position:-200% 0}}
+a{color:var(--cy);direction:ltr;unicode-bidi:isolate;font-weight:600;text-decoration:none;border-bottom:1px dashed var(--cy)}
+.sc{display:grid;grid-template-columns:1fr 130px 1fr;align-items:center;gap:8px}.sc .card{text-align:center}.pk{position:relative;height:40px;border-top:3px dashed var(--cy)}.pk i{position:absolute;top:-13px;width:22px;height:22px;border-radius:6px;background:var(--or);box-shadow:0 0 14px var(--or);animation:mv 2.4s linear infinite}.pk i:nth-child(2){animation-delay:.8s}.pk i:nth-child(3){animation-delay:1.6s}@keyframes mv{from{right:0;opacity:0}15%{opacity:1}to{right:calc(100% - 22px);opacity:.2}}
+.gh{background:var(--p);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.45);transform:perspective(1100px) rotateX(3deg)}.gh .t{padding:8px 16px;border-bottom:1px solid var(--line);direction:ltr;text-align:left}.tabs{display:flex;flex-wrap:wrap;gap:2px;padding:4px 8px;border-bottom:1px solid var(--line);direction:ltr}.tabs button{background:none;border:0;border-bottom:3px solid transparent;color:var(--mute);margin:0;border-radius:0;padding:4px 10px}.tabs button.on{color:#fff;border-color:var(--or);background:rgba(240,81,51,.18);text-shadow:0 0 10px var(--or)}#td{margin:12px 16px;min-height:6em}#td h4{font-size:1.3em;margin:0;color:var(--cy)}#td p{color:var(--ink);margin:4px 0}
+.lg{max-width:380px;margin:auto;background:#0d1117;border:1px solid #30363d;border-radius:14px;padding:18px 22px;direction:ltr;text-align:left;box-shadow:0 24px 60px rgba(0,0,0,.5);transform:perspective(900px) rotateY(-8deg);color:#e6edf3}.lg h4{text-align:center;font-size:1.2em;margin:4px 0 12px}.lg .f{background:#010409;border:1px solid #30363d;border-radius:6px;padding:4px 10px;margin:4px 0 10px;min-height:2em;font-family:ui-monospace,monospace}.lg .f:after{content:"|";animation:bl 1s steps(2) infinite;color:#22d3ee}.lg .b{background:#238636;border-radius:6px;text-align:center;padding:4px;font-weight:600;animation:glow 2s infinite}@keyframes glow{50%{box-shadow:0 0 20px #34d399}}
+.pulse{display:inline-block;font-size:3.2em;line-height:1.2;animation:pu 2s infinite}@keyframes pu{50%{transform:scale(1.18) rotate(-8deg)}}
+:root[data-theme="light"]{color-scheme:light;--bg:#eef3fb;--p:#fff;--p2:#e4ecfa;--ink:#0f1b33;--mute:#4a5d80;--or:#d93a1c;--cy:#0a7fa0;--ok:#0f8f66;--line:#c3d0ea;--nav:rgba(255,255,255,.92)}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--nav:rgba(255,255,255,.92)}}
+nav{background:var(--nav,rgba(7,13,28,.85))}nav button,#cnt{color:var(--ink)}#ms{color:var(--cy)!important}.tabs button.on{color:var(--ink)}
+:root[data-theme="light"] #bg{opacity:.3}:root[data-theme="light"] .card{box-shadow:0 10px 24px rgba(15,27,51,.12)}
+#th{font-size:16px;padding:2px 12px}
+@media(prefers-reduced-motion:reduce){.s,.cube{transition:none;animation:none}}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas><div id="stage">
+
+<!-- 1 -->
+<section class="s" id="s1">
+<div class="row"><div>
+<div class="tag">کارگاه آموزشی • Workshop</div>
+<h1>Git <b>&amp;</b> GitHub<br>از صفر تا انتشار پروژه</h1>
+<p>کنترل نسخه، همکاری تیمی و انتشار نرم‌افزار؛ همان ابزاری که تمام تیم‌های حرفه‌ای دنیا هر روز با آن کار می‌کنند.</p>
+<div class="chips" style="margin-top:14px">
+<span data-n="۱">مفاهیم کنترل نسخه</span><span data-n="۲">دستورات پایه Git</span><span data-n="۳">مخازن GitHub</span><span data-n="۴">شاخه و ادغام</span><span data-n="۵">همکاری تیمی</span><span data-n="۶">انتشار پروژه</span></div>
+</div>
+<div class="cube-wrap"><div class="cube"><div>🌿</div><div>🔀</div><div>📦</div><div>🚀</div><div>🧩</div><div>🐙</div></div></div></div>
+<p>برای حرکت: کلیدهای ← → یا دکمه‌های پایین • خروجی نهایی کارگاه: یک پروژه واقعی منتشرشده در GitHub</p>
+</section>
+
+<!-- agenda -->
+<section class="s">
+<div class="tag">نقشهٔ راه</div><h2>مسیر <b>۳ ساعته</b></h2>
+<div class="grid tilt">
+<div class="card"><span class="ic">🧠</span><h4>۰:۰۰</h4><p>Git و GitHub چیستند؟</p></div>
+<div class="card"><span class="ic">⌨️</span><h4>۰:۲۰</h4><p>دستورات پایه تا commit</p></div>
+<div class="card" style="border-color:var(--or)"><span class="ic">🎯</span><h4>۱:۰۰ — هدف اول</h4><p>حساب GitHub + Push اولین پروژه</p></div>
+<div class="card"><span class="ic">☕</span><h4>۱:۳۰</h4><p>استراحت ۱۰ دقیقه</p></div>
+<div class="card"><span class="ic">🌿</span><h4>۱:۴۰</h4><p>شاخه، ادغام، Conflict</p></div>
+<div class="card"><span class="ic">🔃</span><h4>۲:۱۰</h4><p>Fork، Pull Request، تور GitHub</p></div>
+<div class="card"><span class="ic">🚀</span><h4>۲:۴۰ — هدف دوم</h4><p>Release و پروژهٔ مستقل</p></div></div>
+<div class="lab"><b>هدف اول (همه):</b> حساب GitHub ← پروژه با Git ← <code>push</code> ← دیدن کد در GitHub.<br><b>هدف دوم (هر که رسید):</b> شاخه ← Pull Request ← Release.</div>
+</section>
+
+<!-- start -->
+<section class="s">
+<div class="tag">از صفر</div><h2>Git و GitHub <b>چیستند؟</b></h2>
+<div class="sc"><div class="card"><span class="ic">💻</span><h4>Git</h4><p>تاریخچهٔ تغییرات پروژه — روی کامپیوتر شما</p></div><div class="pk"><i></i><i></i><i></i></div><div class="card"><span class="ic">☁️</span><h4>GitHub</h4><p>میزبانی ابری + همکاری تیمی</p></div></div>
+<div class="grid"><div class="card"><span class="ic">⬇️</span><h4>۱. نصب Git</h4><p><a href="https://git-scm.com/downloads" target="_blank">git-scm.com/downloads</a></p><p><code>brew install git</code> • <code>apt install git</code></p></div><div class="card"><span class="ic">👤</span><h4>۲. ساخت حساب</h4><p><a href="https://github.com/signup" target="_blank">github.com/signup</a></p></div><div class="card"><span class="ic">🖥️</span><h4>۳. ازاینکه ترمینال نمی‌خواهید؟</h4><p><a href="https://desktop.github.com" target="_blank">desktop.github.com</a></p></div></div>
+</section>
+
+<!-- 2 -->
+<section class="s" id="s2">
+<div class="tag">بخش ۱</div><h2>مفاهیم <b>کنترل نسخه</b>: چیست و چرا؟</h2>
+<p>کنترل نسخه سیستمی است که تاریخچهٔ کامل تغییرات فایل‌ها را ثبت می‌کند تا بتوانید به هر نقطه برگردید و چند نفر بدون تداخل روی یک پروژه کار کنند.</p>
+<div class="grid tilt">
+<div class="card"><span class="ic">😱</span><h4>مشکل</h4><p>report_final_v2_REAL_last.docx! ادغام دستی، گم‌شدن کار، نبود تاریخچه.</p></div>
+<div class="card"><span class="ic">⏪</span><h4>راه‌حل: تاریخچه</h4><p>هر تغییر یک Commit با نام، زمان و توضیح؛ برگشت به هر نسخه در چند ثانیه.</p></div>
+<div class="card"><span class="ic">👥</span><h4>همکاری</h4><p>چند نفر هم‌زمان، هرکس در شاخهٔ خودش؛ ادغام امن و بازبینی‌شده.</p></div>
+<div class="card"><span class="ic">🌐</span><h4>توزیع‌شده</h4><p>Git: هر کامپیوتر یک نسخهٔ کامل دارد؛ بدون اینترنت هم کار می‌کنید.</p></div>
+</div>
+<div class="grid tilt">
+<div class="card"><span class="ic">🧰</span><h4>Git چیست؟</h4><p>ابزار خط فرمان رایگان (ساختهٔ Linus Torvalds، ۲۰۰۵) روی کامپیوتر شما.</p></div>
+<div class="card"><span class="ic">🐙</span><h4>GitHub چیست؟</h4><p>پلتفرم ابری برای میزبانی مخزن‌های Git به‌علاوهٔ Issue، PR، Actions و ...</p></div>
+</div>
+<div class="lab"><b>تمرین عملی ۱ (۵ دقیقه):</b> Git را نصب کنید و با <code>git --version</code> بررسی کنید. سپس حساب github.com بسازید.</div>
+</section>
+
+<section class="s">
+<div class="tag">واژه‌نامه</div><h2>واژگان <b>کلیدی</b> Git و GitHub</h2>
+<div class="grid tilt"><div class="card"><h4>Repository</h4><p>مخزن؛ پوشهٔ پروژه همراه با تمام تاریخچه (پوشهٔ <code>.git</code>).</p></div><div class="card"><h4>Commit</h4><p>یک نقطهٔ ذخیره با شناسهٔ یکتا (hash)، نویسنده، زمان و پیام.</p></div><div class="card"><h4>Branch</h4><p>شاخه؛ خط توسعهٔ مستقل. شاخهٔ اصلی: <code>main</code>.</p></div><div class="card"><h4>HEAD</h4><p>اشاره‌گر به جایی که همین حالا روی آن هستید.</p></div><div class="card"><h4>Remote / origin</h4><p>نسخهٔ آنلاین مخزن؛ <code>origin</code> نام پیش‌فرض آن است.</p></div><div class="card"><h4>Clone / Fork</h4><p>Clone: کپی روی کامپیوتر. Fork: کپی شخصی روی حساب GitHub.</p></div><div class="card"><h4>Merge</h4><p>ادغام تغییرات یک شاخه در شاخهٔ دیگر.</p></div><div class="card"><h4>Pull Request</h4><p>درخواست بازبینی و ادغام یک شاخه در GitHub.</p></div><div class="card"><h4>Staging Area</h4><p>جایگاه موقت فایل‌هایی که قرار است وارد commit بعدی شوند.</p></div><div class="card"><h4>Tag / Release</h4><p>برچسب یک نسخهٔ پایدار مثل <code>v1.0.0</code> و صفحهٔ انتشار آن.</p></div></div>
+<div class="lab"><b>مرور سریع:</b> هر واژه را با یک جملهٔ خودتان توضیح بدهید؛ اگر نشد، همان اسلاید را دوباره ببینید.</div>
+</section>
+
+<!-- setup -->
+<section class="s">
+<div class="tag">بخش ۱ <span class="tm">⏱ ۱۰ دقیقه</span></div><h2>نصب و <b>تنظیمات اولیهٔ</b> Git</h2>
+<div class="row"><div class="grid tilt" style="grid-template-columns:1fr 1fr">
+<div class="card"><span class="ic">🪟</span><h4>Windows</h4><p>git-scm.com ← Download ← Git Bash</p></div>
+<div class="card"><span class="ic">🍎</span><h4>macOS</h4><p><code>brew install git</code></p></div>
+<div class="card"><span class="ic">🐧</span><h4>Linux</h4><p><code>sudo apt install git</code></p></div>
+<div class="card"><span class="ic">💻</span><h4>ترمینال</h4><p><code>cd</code> ، <code>ls</code> ، <code>mkdir</code> ، <code>pwd</code></p></div></div>
+<div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp;terminal <button data-play="t8">▶ اجرا</button></div><pre id="t8" data-s='$ git --version|git version 2.45.0|$ git config --global user.name "Ali Rezaei"|$ git config --global user.email "ali@mail.com"|$ git config --global init.defaultBranch main|$ git config --list'></pre></div></div>
+<div class="lab"><b>تمرین:</b> Git را نصب و نام و ایمیل را تنظیم کنید. این اطلاعات روی هر commit ثبت می‌شود.</div>
+</section>
+
+<section class="s">
+<div class="tag">پیش‌نیاز</div><h2>ترمینال: <b>دستورات ضروری</b></h2>
+<div class="row"><div class="term" style="transform:none"><pre style="min-height:0">$ pwd
+/home/ali/projects
+$ ls -la
+$ mkdir my-app
+$ cd my-app
+$ touch index.html style.css
+$ cat README.md
+$ cd ..
+$ rm -r old-folder
+$ clear</pre></div><div class="grid" style="grid-template-columns:1fr 1fr"><div class="card"><h4><code>pwd</code></h4><p>نمایش مسیر فعلی</p></div><div class="card"><h4><code>ls -la</code></h4><p>فهرست فایل‌ها، با فایل‌های مخفی</p></div><div class="card"><h4><code>cd ..</code></h4><p>یک پوشه بالا رفتن</p></div><div class="card"><h4><code>touch f</code></h4><p>ساخت فایل خالی</p></div><div class="card"><h4><code>cat f</code></h4><p>نمایش محتوای فایل</p></div><div class="card"><h4><code>rm -r d</code></h4><p>حذف پوشه؛ بدون سطل بازیافت!</p></div></div></div>
+<div class="lab"><b>ترفند:</b> کلید <b>Tab</b> نام را کامل می‌کند، <b>↑</b> دستور قبلی را برمی‌گرداند و <b>Ctrl+C</b> دستور گیرکرده را متوقف می‌کند.</div>
+</section>
+
+<!-- 3 -->
+<section class="s" id="s3">
+<div class="tag">بخش ۲</div><h2>دستورات <b>پایه و کاربردی</b> Git</h2>
+<div class="row"><div>
+<div class="grid tilt" style="grid-template-columns:1fr 1fr">
+<div class="card"><h4><code>git init</code></h4><p>ساخت مخزن جدید</p></div>
+<div class="card"><h4><code>git status</code></h4><p>وضعیت فایل‌ها</p></div>
+<div class="card"><h4><code>git add</code></h4><p>آماده‌سازی (Staging)</p></div>
+<div class="card"><h4><code>git commit -m</code></h4><p>ثبت نسخه</p></div>
+<div class="card"><h4><code>git log --oneline</code></h4><p>مشاهدهٔ تاریخچه</p></div>
+<div class="card"><h4><code>git diff</code></h4><p>دیدن تغییرات</p></div>
+</div>
+<p style="margin-top:8px">مسیر فایل: <b>Working Directory ← Staging ← Repository</b></p>
+</div>
+<div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp;terminal <button data-play="t3">▶ اجرا</button></div><pre id="t3" data-s='$ mkdir my-app && cd my-app|$ git init|Initialized empty Git repository|$ echo "# My App" > README.md|$ git add README.md|$ git commit -m "first commit"|[main (root-commit) a1b2c3d] first commit'></pre></div></div>
+<div class="lab"><b>تمرین عملی ۲:</b> <ol><li>پوشهٔ <code>my-app</code> بسازید و <code>git init</code> بزنید.</li><li>فایل README بسازید، add و commit کنید.</li><li>با <code>git log --oneline</code> نتیجه را ببینید.</li></ol></div>
+</section>
+
+<!-- ignore -->
+<section class="s">
+<div class="tag">بخش ۲ <span class="tm">⏱ ۱۰ دقیقه</span></div><h2>سه ناحیهٔ Git، <b>.gitignore</b> و README</h2>
+<div class="flow"><div class="card">📝<br>Working Directory</div><em>← add ←</em><div class="card">📥<br>Staging Area</div><em>← commit ←</em><div class="card">🗄️<br>Repository</div></div>
+<div class="row"><div class="term" style="transform:none"><pre style="min-height:0">$ cat .gitignore
+node_modules/
+.env
+*.log
+.DS_Store
+$ git add -p   # انتخاب بخش‌های تغییر</pre></div>
+<div class="grid"><div class="card"><h4>چه چیزی ignore شود؟</h4><p>وابستگی‌ها، فایل‌های موقت، رمزها و کلیدها (<code>.env</code>)؛ هرگز در مخزن نگذارید.</p></div><div class="card"><h4>README خوب</h4><p>نام پروژه، توضیح، نصب، نحوهٔ اجرا، لایسنس؛ در Markdown.</p></div></div></div>
+<div class="lab"><b>تمرین:</b> <code>.gitignore</code> و یک README با تیتر و فهرست بسازید و commit کنید.</div>
+</section>
+
+<section class="s">
+<div class="tag">بخش ۲</div><h2><b>Markdown</b> برای README</h2>
+<div class="row"><div class="term" style="transform:none"><pre style="min-height:0">$ cat README.md
+# DevPortfolio
+A personal page built with HTML and CSS.
+## Install
+`git clone URL`
+## Features
+- **Fast** and *simple*
+[Live site](https://USER.github.io/dev-portfolio/)
+![screenshot](screenshot.png)</pre></div><div class="grid" style="grid-template-columns:1fr 1fr"><div class="card"><h4><code>#</code> / <code>##</code></h4><p>تیتر و زیرتیتر</p></div><div class="card"><h4><code>**متن**</code></h4><p>پررنگ</p></div><div class="card"><h4><code>- مورد</code></h4><p>فهرست</p></div><div class="card"><h4><code>[متن](لینک)</code></h4><p>لینک</p></div><div class="card"><h4><code>![توضیح](img)</code></h4><p>تصویر</p></div><div class="card"><h4><code>`کد`</code></h4><p>کد داخل متن</p></div></div></div>
+<div class="lab"><b>تمرین:</b> README مخزن خودتان را با تیتر، فهرست، لینک و یک تصویر بنویسید و در بخش Preview GitHub ببینید.</div>
+</section>
+
+<!-- undo -->
+<section class="s">
+<div class="tag">بخش ۲ <span class="tm">⏱ ۱۰ دقیقه</span></div><h2><b>برگشت</b> به عقب: restore، reset، revert</h2>
+<div class="grid tilt">
+<div class="card"><span class="ic">↩️</span><h4><code>git restore file</code></h4><p>لغو تغییرات ذخیره‌نشده در فایل. بی‌خطر نیست: تغییرات برنمی‌گردند.</p></div>
+<div class="card"><span class="ic">📤</span><h4><code>git restore --staged</code></h4><p>برگرداندن فایل از Staging به حالت عادی.</p></div>
+<div class="card"><span class="ic">⏮️</span><h4><code>git reset --soft HEAD~1</code></h4><p>حذف آخرین commit و حفظ تغییرات. فقط برای commitهای Push نشده.</p></div>
+<div class="card"><span class="ic">🛟</span><h4><code>git revert HEAD</code></h4><p>ساخت commit جدید که اثر قبلی را خنثی می‌کند؛ امن برای کار تیمی.</p></div>
+</div>
+<p>قاعده: روی چیزی که Push شده، از <b>revert</b> استفاده کنید نه reset. <code>git reflog</code> آخرین نجات‌دهنده است.</p>
+<div class="lab"><b>تمرین:</b> یک فایل را خراب کنید و با restore برگردانید؛ سپس یک commit اشتباه بزنید و با revert خنثی کنید.</div>
+</section>
+
+<section class="s">
+<div class="tag">بخش ۲</div><h2>بررسی <b>تاریخچه و تغییرات</b></h2>
+<div class="row"><div class="term" style="transform:none"><pre style="min-height:0">$ git log --oneline --graph --all
+$ git log --stat -3
+$ git log --author="Ali" --since="2 weeks ago"
+$ git show a1b2c3d
+$ git diff --staged
+$ git blame README.md
+$ git shortlog -sn</pre></div><div class="grid" style="grid-template-columns:1fr 1fr"><div class="card"><h4><code>--graph</code></h4><p>نمایش شاخه‌ها به‌صورت نمودار</p></div><div class="card"><h4><code>--stat</code></h4><p>خلاصهٔ فایل‌های تغییرکرده</p></div><div class="card"><h4><code>git show</code></h4><p>جزئیات یک commit</p></div><div class="card"><h4><code>diff --staged</code></h4><p>تفاوت آنچه add شده</p></div><div class="card"><h4><code>git blame</code></h4><p>نویسندهٔ هر خط</p></div><div class="card"><h4><code>shortlog -sn</code></h4><p>تعداد commit هر نفر</p></div></div></div>
+<div class="lab"><b>تمرین:</b> با <code>git log --graph</code> تاریخچهٔ مخزن خودتان را ببینید و یک commit را با <code>git show</code> باز کنید.</div>
+</section>
+
+<!-- login -->
+<section class="s">
+<div class="tag">GitHub • عملی <span class="tm">⏱ ۱۰ دقیقه</span></div><h2>ساخت حساب و <b>ورود به GitHub</b></h2>
+<div class="row"><div class="flow" style="flex-direction:column;align-items:stretch"><div class="card">۱ • به github.com/signup بروید</div><div class="card">۲ • ایمیل، رمز قوی، نام کاربری</div><div class="card">۳ • کد تأیید را از ایمیل وارد کنید</div><div class="card">۴ • Sign in و تکمیل پروفایل</div><div class="card">۵ • Settings ← Password and authentication ← 2FA</div></div>
+<div class="lg"><h4>🐙 Sign in to GitHub</h4>Username<div class="f"><span class="ty" data-t="ali-dev"></span></div>Password<div class="f"><span class="ty" data-t="••••••••••"></span></div><div class="b">Sign in</div></div></div>
+<div class="lab"><b>همین حالا:</b> وارد شوید ← دکمهٔ + ← New repository ← نام: <code>dev-portfolio</code> ← Public ← بدون README ← Create.</div>
+</section>
+
+<!-- 4 -->
+<section class="s" id="s4">
+<div class="tag">بخش ۳</div><h2>مدیریت <b>مخازن در GitHub</b></h2>
+<div class="row"><div>
+<p>مخزن محلی را به GitHub وصل می‌کنیم. ابتدا در سایت New repository را بزنید، سپس:</p>
+<div class="term" style="transform:none"><pre style="min-height:0">$ git remote add origin https://github.com/USER/my-app.git
+$ git branch -M main
+$ git push -u origin main
+$ git clone https://github.com/USER/other.git
+$ git pull   # دریافت تغییرات</pre></div>
+</div>
+<div class="grid tilt" style="grid-template-columns:repeat(3,1fr)">
+<div class="card"><span class="ic">📁</span><h4>Code</h4><p>فایل‌ها و README</p></div>
+<div class="card"><span class="ic">🐞</span><h4>Issues</h4><p>باگ و وظایف</p></div>
+<div class="card"><span class="ic">🔃</span><h4>Pull requests</h4><p>پیشنهاد تغییر</p></div>
+<div class="card"><span class="ic">⚙️</span><h4>Actions</h4><p>تست و استقرار خودکار</p></div>
+<div class="card"><span class="ic">📋</span><h4>Projects</h4><p>برد کانبان</p></div>
+<div class="card"><span class="ic">🛡️</span><h4>Security</h4><p>اسکن آسیب‌پذیری</p></div>
+<div class="card"><span class="ic">📊</span><h4>Insights</h4><p>آمار مشارکت</p></div>
+<div class="card"><span class="ic">🔧</span><h4>Settings</h4><p>دسترسی و قوانین</p></div>
+<div class="card"><span class="ic">📖</span><h4>Wiki / Pages</h4><p>مستندات و سایت</p></div>
+</div></div>
+<div class="lab"><b>تمرین عملی ۳:</b> یک مخزن Public بسازید، پروژهٔ تمرین ۲ را Push کنید و صفحهٔ GitHub را Refresh کنید؛ تب‌ها را یکی‌یکی بگردید.</div>
+</section>
+
+<section class="s">
+<div class="tag">بخش ۳</div><h2><b>Remote</b>: ارتباط با GitHub</h2>
+<div class="row"><div class="term" style="transform:none"><pre style="min-height:0">$ git remote -v
+$ git fetch origin
+$ git pull --rebase origin main
+$ git push origin feature/login
+$ git remote set-url origin git@github.com:USER/repo.git
+$ git remote add upstream https://github.com/ORIGINAL/repo.git
+$ git fetch upstream</pre></div><div class="grid" style="grid-template-columns:1fr"><div class="card"><h4><code>fetch</code> در برابر <code>pull</code></h4><p>fetch فقط دانلود می‌کند و چیزی را تغییر نمی‌دهد؛ pull دانلود + ادغام است.</p></div><div class="card"><h4><code>upstream</code></h4><p>در Fork، آدرس مخزن اصلی؛ برای هم‌گام‌ماندن با آن.</p></div><div class="card"><h4><code>set-url</code></h4><p>تغییر آدرس origin، مثلاً از HTTPS به SSH.</p></div></div></div>
+<div class="lab"><b>قاعده:</b> قبل از شروع کار <code>git pull</code> و بعد از commit، <code>git push</code>.</div>
+</section>
+
+<!-- auth -->
+<section class="s">
+<div class="tag">🎯 هدف اول <span class="tm">⏱ ۲۰ دقیقه</span></div><h2>اولین <b>Push</b> و ورود به حساب</h2>
+<div class="row"><div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp;terminal</div><pre>$ git remote add origin https://github.com/USER/dev-portfolio.git
+$ git branch -M main
+$ git push -u origin main
+Enumerating objects: 9, done.
+Writing objects: 100% (9/9), done.
+ * [new branch]      main -> main</pre></div>
+<div class="grid" style="grid-template-columns:1fr">
+<div class="card"><h4>۱ • Git Credential Manager ⭐</h4><p>با <code>git push</code> مرورگر باز می‌شود ← Authorize</p></div>
+<div class="card"><h4>۲ • Personal Access Token</h4><p>Settings ← Developer settings ← Tokens ← Generate؛ توکن را به‌جای رمز وارد کنید</p></div>
+<div class="card"><h4>۳ • SSH</h4><p><code>ssh-keygen -t ed25519</code> ← فایل pub را در Settings ← SSH keys بگذارید</p></div></div></div>
+<div class="lab"><b>رمز حساب GitHub برای Push کار نمی‌کند</b> — یکی از سه راه بالا. اگر گیر کردید دست بالا ببرید.</div>
+</section>
+
+<!-- check -->
+<section class="s" style="text-align:center">
+<div class="tag">🎯 نقطهٔ بررسی</div><h2>هدف اول: <b>پروژهٔ شما روی GitHub است</b></h2>
+<div><span class="pulse">🎯</span></div>
+<div class="grid tilt">
+<div class="card"><span class="ic">✅</span><h4>حساب GitHub</h4></div>
+<div class="card"><span class="ic">✅</span><h4>Git نصب و تنظیم</h4></div>
+<div class="card"><span class="ic">✅</span><h4>حداقل ۳ commit</h4></div>
+<div class="card"><span class="ic">✅</span><h4>remote origin وصل</h4></div>
+<div class="card"><span class="ic">✅</span><h4>کد در GitHub دیده می‌شود</h4></div></div>
+<div class="term" style="text-align:left;max-width:560px;margin:auto"><pre style="min-height:0">$ git remote -v
+origin  https://github.com/USER/dev-portfolio.git (push)
+$ git log --oneline
+c3d4e5f add about section
+a1b2c3d first commit</pre></div>
+<div class="lab"><b>هر که رسید:</b> آدرس مخزن را برای هم‌گروهی بفرستد. بقیه کمک بگیرند. از اینجا به بعد «هدف دوم» است.</div>
+</section>
+
+<!-- tour -->
+<section class="s">
+<div class="tag">GitHub • تور کامل</div><h2>همهٔ بخش‌های <b>مخزن</b></h2>
+<div class="gh"><div class="t"><b>📁 ali-dev / dev-portfolio</b> &nbsp;<span class="chips" style="display:inline"><span>Public</span></span></div><div class="tabs" id="tb"></div><div id="td"></div></div>
+<div class="lab"><b>روی هر تب کلیک کنید</b> — در مخزن واقعی خودتان همین نوار را باز کنید و تب‌ها را تک تک بگردید.</div>
+</section>
+
+<section class="s">
+<div class="tag">GitHub • عملی</div><h2>اولین <b>Workflow</b> در Actions</h2>
+<div class="row"><div class="term" style="transform:none"><pre style="min-height:0">$ mkdir -p .github/workflows
+$ touch .github/workflows/ci.yml
+name: CI
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Hello CI"
+$ git add . && git commit -m "ci: add workflow"
+$ git push</pre></div><div class="grid" style="grid-template-columns:1fr 1fr"><div class="card"><h4><code>on</code></h4><p>چه رویدادی اجرا را شروع کند</p></div><div class="card"><h4><code>jobs</code></h4><p>فهرست کارها</p></div><div class="card"><h4><code>runs-on</code></h4><p>نوع ماشین موقت</p></div><div class="card"><h4><code>uses / run</code></h4><p>مرحلهٔ آماده / دستور دلخواه</p></div></div></div>
+<div class="lab"><b>نتیجه:</b> تب Actions ← تیک سبز یعنی موفق، ضربدر قرمز یعنی خراب. در YAML فاصله‌ها (indent) مهم‌اند؛ Tab نزنید.</div>
+</section>
+
+<!-- 5 -->
+<section class="s" id="s5">
+<div class="tag">بخش ۴</div><h2>مدیریت <b>شاخه‌ها</b> و ادغام کد</h2>
+<div class="row"><div>
+<svg viewBox="0 0 520 210" role="img" aria-label="Git branch graph">
+<defs><filter id="g"><feGaussianBlur stdDeviation="3"/></filter></defs>
+<path class="dr" d="M30 140H490" stroke="#22d3ee" stroke-width="4"/><path class="dr" d="M130 140C160 60 180 60 210 60H330C360 60 380 100 410 140" fill="none" stroke="#f05133" stroke-width="4"/>
+<g fill="#0e1730" stroke-width="4"><circle cx="30" cy="140" r="12" stroke="#22d3ee"/><circle cx="130" cy="140" r="12" stroke="#22d3ee"/><circle cx="210" cy="60" r="12" stroke="#f05133"/><circle cx="330" cy="60" r="12" stroke="#f05133"/><circle cx="410" cy="140" r="14" stroke="#34d399"/><circle cx="490" cy="140" r="12" stroke="#22d3ee"/></g>
+<g fill="currentColor" font-size="15" text-anchor="middle"><text x="30" y="180">main</text><text x="270" y="35" fill="#f05133">feature/login</text><text x="410" y="180" fill="#34d399">merge</text><text x="490" y="180">HEAD</text></g></svg>
+<div class="grid tilt" style="grid-template-columns:1fr 1fr">
+<div class="card"><h4><code>git switch -c feature</code></h4><p>ساخت و رفتن به شاخه</p></div>
+<div class="card"><h4><code>git merge feature</code></h4><p>ادغام در شاخهٔ فعلی</p></div></div>
+</div>
+<div class="term"><div class="bar"><i></i><i></i><i></i>&nbsp;terminal <button data-play="t5">▶ اجرا</button></div><pre id="t5" data-s='$ git switch -c feature/login|Switched to a new branch|$ git commit -am "add login"|$ git switch main|$ git merge feature/login|CONFLICT (content): index.html|$ # حل تعارض، سپس:|$ git add . && git commit|Merge made by the ort strategy'></pre></div></div>
+<div class="lab"><b>تمرین عملی ۴:</b> دو شاخه بسازید که یک خط README را متفاوت تغییر دهند؛ ادغام کنید، Conflict را دستی حل و commit کنید.</div>
+</section>
+
+<section class="s">
+<div class="tag">بخش ۴</div><h2>دستورات <b>شاخه</b>: دیدن، تغییر نام، حذف</h2>
+<div class="row"><div class="term" style="transform:none"><pre style="min-height:0">$ git branch
+* main
+$ git branch -a
+$ git switch feature/login
+$ git branch -m old-name new-name
+$ git branch -d feature/login
+$ git push origin --delete feature/login
+$ git diff main..feature/login</pre></div><div class="grid" style="grid-template-columns:1fr 1fr"><div class="card"><h4><code>-a</code></h4><p>شاخه‌های محلی و remote</p></div><div class="card"><h4><code>-d</code> / <code>-D</code></h4><p>حذف امن / حذف اجباری</p></div><div class="card"><h4><code>-vv</code></h4><p>شاخه همراه با remote مربوطه</p></div><div class="card"><h4>نام‌گذاری</h4><p><code>feature/</code> ، <code>fix/</code> ، <code>docs/</code></p></div></div></div>
+<div class="lab"><b>تمرین:</b> یک شاخه بسازید، یک بار تغییر نام بدهید و پس از ادغام آن را حذف کنید.</div>
+</section>
+
+<!-- stash -->
+<section class="s">
+<div class="tag">بخش ۴ <span class="tm">⏱ ۱۰ دقیقه</span></div><h2>ابزارهای <b>پیشرفته‌تر</b> 🔸اختیاری: stash، rebase، cherry-pick</h2>
+<div class="grid tilt">
+<div class="card"><span class="ic">📦</span><h4><code>git stash</code> / <code>stash pop</code></h4><p>کار نیمه‌تمام را موقتاً کنار بگذارید و شاخه عوض کنید.</p></div>
+<div class="card"><span class="ic">🧵</span><h4><code>git rebase main</code></h4><p>شاخه را روی آخرین main بازنویسی می‌کند؛ تاریخچهٔ خطی. روی شاخه‌های مشترک نزنید.</p></div>
+<div class="card"><span class="ic">🍒</span><h4><code>git cherry-pick &lt;id&gt;</code></h4><p>برداشتن فقط یک commit مشخص از شاخهٔ دیگر.</p></div>
+<div class="card"><span class="ic">🔎</span><h4><code>git blame</code> / <code>git log --graph</code></h4><p>چه کسی کدام خط را نوشته؛ نمای گرافیکی تاریخچه.</p></div>
+</div>
+<div class="lab"><b>تمرین:</b> وسط کار، <code>stash</code> بزنید، به main بروید، برگردید و <code>stash pop</code> کنید.</div>
+</section>
+
+<!-- conflict -->
+<section class="s">
+<div class="tag">بخش ۴ <span class="tm">⏱ ۱۵ دقیقه</span></div><h2>سناریوی کامل <b>Conflict</b></h2>
+<div class="row"><div class="term" style="transform:none"><pre style="min-height:0">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+&lt;h1&gt;Welcome&lt;/h1&gt;
+=======
+&lt;h1&gt;Hello&lt;/h1&gt;
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/login</pre></div>
+<div class="grid"><div class="card"><h4>مراحل حل</h4><p>۱) فایل را باز کنید ۲) نسخهٔ نهایی را بنویسید و علامت‌ها را پاک کنید ۳) <code>git add</code> ۴) <code>git commit</code></p></div><div class="card"><h4>انصراف</h4><p><code>git merge --abort</code> همه‌چیز را به قبل از merge برمی‌گرداند.</p></div></div></div>
+<div class="lab"><b>تمرین دو‌نفره:</b> هر نفر یک خط یکسان README را متفاوت تغییر دهد؛ یکی Push و دیگری Pull کند و تعارض را حل کنند.</div>
+</section>
+
+<!-- 6 -->
+<section class="s" id="s6">
+<div class="tag">بخش ۵</div><h2><b>همکاری تیمی</b> در توسعهٔ نرم‌افزار</h2>
+<p>جریان استاندارد مشارکت در پروژه‌های متن‌باز و شرکتی:</p>
+<div class="flow">
+<div class="card">🍴<br>Fork</div><em>←</em><div class="card">⬇️<br>Clone</div><em>←</em><div class="card">🌿<br>Branch</div><em>←</em><div class="card">💾<br>Commit</div><em>←</em><div class="card">⬆️<br>Push</div><em>←</em><div class="card">🔃<br>Pull Request</div><em>←</em><div class="card">👀<br>Review</div><em>←</em><div class="card">✅<br>Merge</div></div>
+<div class="grid tilt">
+<div class="card"><span class="ic">💬</span><h4>Code Review</h4><p>همتا کد را بررسی و نظر می‌دهد؛ کیفیت و یادگیری تیم بالا می‌رود.</p></div>
+<div class="card"><span class="ic">🔒</span><h4>Protected Branch</h4><p>شاخهٔ main فقط با PR و تأیید بازبین قابل تغییر است.</p></div>
+<div class="card"><span class="ic">🏷️</span><h4>Issues + Labels</h4><p>هر کار یک Issue؛ در PR با <code>Closes #12</code> خودکار بسته می‌شود.</p></div>
+<div class="card"><span class="ic">📝</span><h4>پیام Commit خوب</h4><p>کوتاه و دستوری: <code>fix: login bug</code></p></div>
+</div>
+<div class="lab"><b>تمرین عملی ۵ (دو‌نفره):</b> مخزن هم‌گروهی را Fork کنید، یک خط به README اضافه و Pull Request بفرستید؛ سپس PR او را Review و Merge کنید.</div>
+</section>
+
+<!-- pr -->
+<section class="s">
+<div class="tag">بخش ۵ <span class="tm">⏱ ۱۵ دقیقه</span></div><h2>Issue و <b>Pull Request</b> در عمل</h2>
+<div class="row"><div class="grid tilt"><div class="card"><h4>۱. Issue بسازید</h4><p>عنوان، توضیح، Label و Assignee.</p></div><div class="card"><h4>۲. شاخه و commit</h4><p><code>git switch -c fix/12-typo</code></p></div><div class="card"><h4>۳. Push و باز کردن PR</h4><p><code>git push -u origin fix/12-typo</code> سپس «Compare &amp; pull request»</p></div><div class="card"><h4>۴. Review و Merge</h4><p>نظر، Approve، Squash and merge، حذف شاخه.</p></div></div>
+<div class="card" style="transform:perspective(900px) rotateY(-5deg)"><h4>نمونهٔ توضیح PR</h4><p><b>عنوان:</b> fix: correct typo in header<br><b>توضیح:</b> غلط املایی تیتر اصلاح شد.<br><b>Closes #12</b><br>☑ تست شد ☑ README به‌روز است</p></div></div>
+<div class="lab"><b>تمرین:</b> برای مخزن هم‌گروهی Issue باز کنید، او با PR آن را حل کند و شما Review کنید.</div>
+</section>
+
+<section class="s">
+<div class="tag">بخش ۵</div><h2>پیام <b>Commit</b> حرفه‌ای</h2>
+<div class="row"><div class="term" style="transform:none"><pre style="min-height:0">$ git add .
+$ git commit -am "fix: header typo"
+$ git commit -m "feat: add contact form"
+$ git commit -m "fix: correct header typo"
+$ git commit -m "docs: update README"
+$ git commit --amend -m "feat: add contact page"
+$ git log --oneline -5</pre></div><div><div class="chips"><span data-n="feat">قابلیت جدید</span><span data-n="fix">رفع باگ</span><span data-n="docs">مستندات</span><span data-n="style">ظاهر و قالب</span><span data-n="refactor">بازنویسی</span><span data-n="chore">کارهای جانبی</span></div><p style="margin-top:10px">هر commit یک کار؛ پیام کوتاه، دستوری و روشن. <code>--amend</code> فقط برای آخرین commit Push‌نشده.</p></div></div>
+<div class="lab"><b>تمرین:</b> سه commit با پیام‌های <code>feat:</code> و <code>fix:</code> و <code>docs:</code> بزنید.</div>
+</section>
+
+<!-- 7 -->
+<section class="s" id="s7">
+<div class="tag">بخش ۶</div><h2>مدیریت و <b>انتشار پروژه</b> + خروجی نهایی</h2>
+<div class="row"><div>
+<div class="term" style="transform:none"><pre style="min-height:0">$ git tag -a v1.0.0 -m "First release"
+$ git push origin v1.0.0
+# GitHub ← Releases ← Draft a new release
+# اختیاری: GitHub Pages برای سایت زنده</pre></div>
+<div class="grid tilt" style="grid-template-columns:repeat(3,1fr);margin-top:12px">
+<div class="card"><h4>MAJOR</h4><p><code>2</code>.0.0 تغییر ناسازگار</p></div>
+<div class="card"><h4>MINOR</h4><p>1.<code>3</code>.0 قابلیت جدید</p></div>
+<div class="card"><h4>PATCH</h4><p>1.3.<code>7</code> رفع باگ</p></div></div>
+</div>
+<div class="card" style="transform:perspective(900px) rotateY(-5deg)"><span class="ic">🎯</span><h4>خروجی نهایی هر شرکت‌کننده</h4>
+<p>✔ یک مخزن عمومی با README حرفه‌ای و <code>.gitignore</code><br>✔ حداقل ۵ commit با پیام‌های معنادار<br>✔ یک شاخهٔ feature و یک Pull Request ادغام‌شده<br>✔ Tag نسخهٔ <code>v1.0.0</code> و یک Release<br>✔ ارسال لینک مخزن به استاد</p></div></div>
+<p style="text-align:center">موفق باشید 🚀 — منبع تکمیلی: کتاب تعاملی Git &amp; GitHub همین کارگاه</p>
+</section>
+<!-- security -->
+<section class="s">
+<div class="tag">بخش ۶ <span class="tm">⏱ ۱۰ دقیقه</span></div><h2>امنیت: <b>SSH</b> و نشت Secret</h2>
+<div class="row"><div class="term" style="transform:none"><pre style="min-height:0">$ ssh-keygen -t ed25519 -C "ali@mail.com"
+$ cat ~/.ssh/id_ed25519.pub
+# GitHub ← Settings ← SSH keys ← New
+$ ssh -T git@github.com
+Hi USER! You've successfully authenticated</pre></div>
+<div class="grid"><div class="card"><span class="ic">🔑</span><h4>اگر رمز را push کردید</h4><p>حذف از commit کافی نیست: فوراً کلید را باطل (Revoke) و عوض کنید.</p></div><div class="card"><span class="ic">🛡️</span><h4>پیشگیری</h4><p><code>.gitignore</code>، متغیر محیطی، فعال‌کردن Secret scanning و 2FA.</p></div></div></div>
+<div class="lab"><b>تمرین:</b> کلید SSH بسازید، به GitHub اضافه کنید و با <code>ssh -T</code> تست کنید.</div>
+</section>
+
+<section class="s">
+<div class="tag">عیب‌یابی</div><h2>خطاهای رایج و <b>راه‌حل</b></h2>
+<div class="grid tilt" style="grid-template-columns:repeat(3,1fr)"><div class="card"><span class="ic">🚫</span><h4><code>not a git repository</code></h4><p>داخل پوشهٔ مخزن نیستید: <code>cd</code> یا <code>git init</code>.</p></div><div class="card"><span class="ic">⛔</span><h4><code>rejected (non-fast-forward)</code></h4><p>ابتدا <code>git pull</code> بزنید، تعارض را حل و دوباره Push کنید.</p></div><div class="card"><span class="ic">🔑</span><h4><code>Permission denied (publickey)</code></h4><p>کلید SSH اضافه نشده؛ با <code>ssh -T git@github.com</code> تست کنید.</p></div><div class="card"><span class="ic">🔒</span><h4><code>Authentication failed</code></h4><p>رمز حساب قبول نیست؛ از Token یا Credential Manager استفاده کنید.</p></div><div class="card"><span class="ic">🧭</span><h4><code>detached HEAD</code></h4><p>روی یک commit قدیمی هستید: <code>git switch main</code>.</p></div><div class="card"><span class="ic">🪪</span><h4><code>Please tell me who you are</code></h4><p><code>user.name</code> و <code>user.email</code> را تنظیم کنید.</p></div></div>
+<div class="lab"><b>عادت حرفه‌ای:</b> هر خطا را کامل بخوانید؛ Git معمولاً راه‌حل را همان‌جا می‌نویسد. گیج شدید: <code>git status</code>.</div>
+</section>
+
+<!-- project -->
+<section class="s">
+<div class="tag">پروژهٔ نهایی • قدم ۱–۳ حداقل، ۴–۷ اضافه <span class="tm">⏱ ۳۰ دقیقه</span></div><h2>پروژهٔ <b>DevPortfolio</b>: همه‌چیز را کنار هم بگذارید</h2>
+<div class="flow"><div class="card">1️⃣<br>ساخت مخزن</div><em>←</em><div class="card">2️⃣<br>README + ignore</div><em>←</em><div class="card">3️⃣<br>۵ commit</div><em>←</em><div class="card">4️⃣<br>شاخهٔ feature</div><em>←</em><div class="card">5️⃣<br>Pull Request</div><em>←</em><div class="card">6️⃣<br>Tag + Release</div><em>←</em><div class="card">7️⃣<br>GitHub Pages</div></div>
+<div class="lab"><b>کار هر نفر:</b> یک صفحهٔ شخصی ساده (<code>index.html</code>) بسازید و با همین مراحل منتشر کنید. فعال‌سازی Pages: Settings ← Pages ← Branch: main. نتیجه یک وب‌سایت زنده با لینک اختصاصی است.</div>
+<p>معیار ارزیابی: تاریخچهٔ تمیز، پیام‌های معنادار، PR ادغام‌شده، Release منتشرشده.</p>
+</section>
+
+<section class="s">
+<div class="tag">مرور نهایی</div><h2>خلاصهٔ <b>دستورات</b> مهم</h2>
+<div class="flow"><div class="card">status</div><em>←</em><div class="card">add</div><em>←</em><div class="card">commit</div><em>←</em><div class="card">push</div></div><div class="grid tilt" style="grid-template-columns:repeat(4,1fr)"><div class="card"><h4><code>git init</code></h4><p>ساخت مخزن</p></div><div class="card"><h4><code>git clone URL</code></h4><p>کپی مخزن</p></div><div class="card"><h4><code>git status</code></h4><p>وضعیت فایل‌ها</p></div><div class="card"><h4><code>git add .</code></h4><p>آماده‌سازی همه</p></div><div class="card"><h4><code>git commit -m</code></h4><p>ثبت نسخه</p></div><div class="card"><h4><code>git push</code></h4><p>ارسال به GitHub</p></div><div class="card"><h4><code>git pull</code></h4><p>دریافت تغییرات</p></div><div class="card"><h4><code>git switch -c x</code></h4><p>ساخت شاخه</p></div><div class="card"><h4><code>git merge x</code></h4><p>ادغام شاخه</p></div><div class="card"><h4><code>git log --oneline</code></h4><p>تاریخچه</p></div><div class="card"><h4><code>git restore f</code></h4><p>لغو تغییر فایل</p></div><div class="card"><h4><code>git revert HEAD</code></h4><p>خنثی‌کردن commit</p></div></div>
+<div class="lab"><b>عادت روزانه:</b> <code>git pull</code> ← کار ← <code>git status</code> ← <code>git add</code> ← <code>git commit</code> ← <code>git push</code>.</div>
+</section>
+
+<!-- wrap -->
+<section class="s">
+<div class="tag">جمع‌بندی <span class="tm">⏱ ۵ دقیقه</span></div><h2>چه چیزی <b>یاد گرفتیم</b>؟</h2>
+<div class="grid tilt"><div class="card"><span class="ic">1</span><h4>نسخه‌ها</h4><p>commit = یک نقطهٔ امن برای بازگشت.</p></div><div class="card"><span class="ic">2</span><h4>شاخه‌ها</h4><p>برای هر کار یک Branch.</p></div><div class="card"><span class="ic">3</span><h4>همکاری</h4><p>PR و Review به‌جای تغییر مستقیم main.</p></div><div class="card"><span class="ic">4</span><h4>انتشار</h4><p>Tag و Release برای نسخه‌های پایدار.</p></div></div>
+<div class="lab"><b>پرسش‌های مرور:</b> تفاوت Git و GitHub؟ reset یا revert روی کد Push‌شده؟ چرا نباید مستقیم روی main کار کرد؟ SemVer چه معنایی دارد؟</div>
+<p style="text-align:center">پرسش و پاسخ • لینک پروژه‌هایتان را برای من بفرستید 🚀</p>
+</section>
+</div>
+
+<nav><button id="nx">بعدی ◀</button><div id="bar"><i></i></div><span id="ms" style="color:#22d3ee;font-size:13px;white-space:nowrap"></span><span id="cnt"></span><button id="pv">▶ قبلی</button><button id="fs">⛶</button><button id="th" title="T">☀️</button></nav>
+
+<script>
+const S=[...document.querySelectorAll('.s')];let c=0;
+function go(n){c=Math.max(0,Math.min(S.length-1,n));S.forEach((s,i)=>{s.classList.toggle('on',i===c);s.classList.toggle('prev',i<c)});
+document.getElementById('bar').firstChild.style.width=((c+1)/S.length*100)+'%';
+document.getElementById('cnt').textContent=(c+1)+'/'+S.length;stageAuto();try{history.replaceState(null,'','#s'+(c+1))}catch(e){}}
+nx.onclick=()=>go(c+1);pv.onclick=()=>go(c-1);
+fs.onclick=()=>{try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}catch(e){}};
+addEventListener('keydown',e=>{if(['ArrowLeft','PageDown',' '].includes(e.key))go(c+1);if(['ArrowRight','PageUp'].includes(e.key))go(c-1)});
+addEventListener('hashchange',()=>{const m=location.hash.match(/s(\d+)/);if(m)go(+m[1]-1)});
+document.querySelectorAll('.tilt .card, .card').forEach(el=>{el.addEventListener('mousemove',e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.transform=`perspective(700px) rotateY(${x*-18}deg) rotateX(${y*14}deg) translateZ(8px)`});el.addEventListener('mouseleave',()=>el.style.transform='')});
+window.PL=(function(){return function(p){clearTimeout(p._t);const L=p.dataset.s.split('|');p.innerHTML='';let i=0;const id=p._id=(p._id||0)+1;
+(function next(){if(i>=L.length)return;const l=L[i++],d=document.createElement('div');p.appendChild(d);let j=0;const cmd=l.startsWith('$');
+(function ty(){d.innerHTML=(cmd?'<span class="p">$</span>'+esc(l.slice(1,++j+1)):'<span class="o">'+esc(l)+'</span>');if(cmd&&j<l.length-1)setTimeout(ty,28);else setTimeout(next,cmd?350:200)})()})()}})();document.querySelectorAll('[data-play]').forEach(b=>b.onclick=()=>PL(document.getElementById(b.dataset.play)));
+const MS=['شروع','شروع','شروع','ذهنیت','ذهنیت','آماده‌سازی','آماده‌سازی','ثبت نسخه','ثبت نسخه','ثبت نسخه','ثبت نسخه','ثبت نسخه','GitHub','GitHub','GitHub','GitHub','هدف اول','GitHub','GitHub','شاخه','شاخه','شاخه','شاخه','تیم','تیم','تیم','انتشار','امنیت','عیب‌یابی','پروژه','مرور','پایان'];
+function stageAuto(){document.getElementById('ms').textContent='🎯 '+(MS[c]||'')+' ← انتشار پروژه';S[c].querySelectorAll('.term pre').forEach(p=>{if(!p.dataset.s)p.dataset.s=p.textContent.trim().split('\n').join('|');setTimeout(()=>{if(S[c].contains(p))PL(p)},700)})}
+function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+const m=location.hash.match(/s(\d+)/);const T=[['📁','Code','فایل‌ها، شاخه‌ها، README و تاریخچهٔ commitها. دکمهٔ سبز Code ← آدرس Clone.','git clone &lt;URL&gt;'],['🐞','Issues','فهرست باگ‌ها و کارها؛ هر Issue شماره، Label و مسئول دارد.','Closes #12'],['🔃','Pull requests','پیشنهاد ادغام یک شاخه — بحث، Review و تأیید اینجاست.','git push -u origin feature'],['⚙️','Actions','اجرای خودکار تست و استقرار با هر Push.','.github/workflows/ci.yml'],['📋','Projects','برد کانبان: To do ← Doing ← Done.','Issue ← Card'],['📖','Wiki','مستندات پروژه جدا از کد.','Markdown'],['🛡️','Security','هشدار آسیب‌پذیری وابستگی‌ها و نشت Secret.','Dependabot • Secret scanning'],['📊','Insights','آمار مشارکت‌کننده‌ها، commitها و Traffic.','Contributors • Traffic'],['🔧','Settings','دسترسی اعضا، Branch protection، Pages و حذف مخزن.','Settings ← Pages']];
+const tb=document.getElementById('tb'),tdv=document.getElementById('td');let ti=0;
+function sh(i){ti=i;[...tb.children].forEach((b,j)=>b.classList.toggle('on',j==i));const d=T[i];tdv.innerHTML='<h4>'+d[0]+' '+d[1]+'</h4><p>'+d[2]+'</p><code>'+d[3]+'</code>';tdv.style.animation='none';tdv.offsetWidth;tdv.style.animation='rise .6s'}
+T.forEach((d,i)=>{const b=document.createElement('button');b.textContent=d[1];b.onclick=()=>sh(i);tb.appendChild(b)});sh(0);
+setInterval(()=>{if(document.querySelector('.s.on #tb')&&!tb.matches(':hover'))sh((ti+1)%T.length)},3500);
+setInterval(()=>{document.querySelectorAll('.ty').forEach(e=>{const on=e.closest('.s.on');if(!on){e._d=0;return}if(e._d)return;e._d=1;const t=e.dataset.t;let i=0;e.textContent='';(function f(){e.textContent=t.slice(0,++i);if(i<t.length)setTimeout(f,110)})()})},500);
+const cv=document.getElementById('bg'),cx=cv.getContext('2d');let W,H,P=[];function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight;P=Array.from({length:Math.min(90,W/14)},()=>({x:Math.random()*W,y:Math.random()*H,vx:Math.random()*.6-.3,vy:Math.random()*.6-.3}))}rs();addEventListener('resize',rs);
+(function dr(){cx.clearRect(0,0,W,H);P.forEach((a,i)=>{a.x=(a.x+a.vx+W)%W;a.y=(a.y+a.vy+H)%H;cx.fillStyle='#22d3ee';cx.fillRect(a.x,a.y,2,2);for(let j=i+1;j<P.length;j++){const b=P[j],d=Math.hypot(a.x-b.x,a.y-b.y);if(d<110){cx.strokeStyle='rgba(34,211,238,'+(1-d/110)*.35+')';cx.beginPath();cx.moveTo(a.x,a.y);cx.lineTo(b.x,b.y);cx.stroke()}}});requestAnimationFrame(dr)})();
+const R=document.documentElement;let TH='';try{TH=localStorage.getItem('th')||''}catch(e){}
+function cur(){return TH||(matchMedia('(prefers-color-scheme:light)').matches?'light':'dark')}
+function ap(t){TH=t;if(t)R.dataset.theme=t;else delete R.dataset.theme;document.getElementById('th').textContent=cur()=='light'?'🌙':'☀️'}
+document.getElementById('th').onclick=()=>{const n=cur()=='light'?'dark':'light';try{localStorage.setItem('th',n)}catch(e){}ap(n)};ap(TH);
+addEventListener('keydown',e=>{if(e.key=='t'||e.key=='T')document.getElementById('th').click()});
+go(m?+m[1]-1:0);
+</script>
+</body>
+</html>
